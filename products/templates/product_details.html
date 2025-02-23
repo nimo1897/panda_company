@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block content %}
+<div class="max-w-3xl mx-auto bg-gray-900 text-white shadow-lg rounded-lg p-6 mt-10">
+    <div class="bg-white shadow-lg rounded-lg p-6 mb-6">
+        <!-- Post Header -->
+        <div class="flex flex-col md:flex-row items-center space-y-6 md:space-y-0 md:space-x-8 p-6 bg-white shadow-lg rounded-lg mb-6 transition-transform transform hover:scale-105">
+            <!-- Profile Image -->
+            <img class="w-14 h-14 rounded-full object-cover border-2 border-gray-300 shadow-md" src="{% static 'img/pp.png' %}" alt="Profile">
+        
+            <!-- Profile Name -->
+            <div class="text-gray-700 space-y-1">
+                <p class="text-sm">
+                    Created by 
+                    <span class="text-lg font-semibold">{{ product.user }}</span>
+                </p>
+                <p class="text-xs text-gray-500">
+                    {{ product.created_at|date:"M d, Y H:i" }}
+                </p>
+                {% if product.user == request.user %}
+                <div class="flex space-x-4 mt-2">
+                    <a href="{% url 'update_product' product.id %}" class="text-blue-600 hover:underline font-bold">Edit</a>
+                    <a href="{% url 'delete_product' product.id %}" class="text-red-600 hover:underline font-bold">Delete</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <!-- Product Title -->
+        <h1 class="text-3xl text-gray-900 font-bold mt-4">{{ product.name }}</h1>
+        
+        <!-- Product Image -->
+        {% if product.image %}
+        <div class="my-6">
+            <img class="w-full object-cover rounded-lg" src="{{ product.image.url }}" alt="{{ product.name }}">
+        </div>
+        {% endif %}
+
+        <!-- Product Description -->
+        <p class="text-gray-700 text-lg">{{ product.description }}</p>
+
+        <!-- Product Details -->
+        <div class="flex justify-between mt-6 text-gray-600">
+            <p><strong>Cost:</strong> <span class="text-lg font-semibold">{{ product.estimated_cost }}</span></p>
+            <p><strong>Profit:</strong> <span class="text-lg font-semibold">{{ product.estimated_profit }}</span></p>
+            <p><strong>Time:</strong> <span class="text-lg font-semibold">{{ product.estimated_time }} day{{ product.estimated_time|pluralize }}</span></p>
+        </div>
+    </div>
+
+
+    <div class="flex justify-between items-center flex-wrap gap-4">
+        <!-- Comments and Votes Section -->
+        <div class="flex items-center gap-4 text-gray-700 font-medium">
+            <h3>{{ comment_count }} comment{{ comment_count|pluralize }}</h3>
+            <h3>{{ vote_count }} vote{{ vote_count|pluralize }}</h3>
+        </div>
+    
+        <!-- Voting Section -->
+        <div>
+            {% if not has_voted %}
+            <form method="POST">
+                {% csrf_token %}
+                <div class="flex items-center gap-2">
+                    <label for="is_approved" class="flex items-center gap-1 cursor-pointer">
+                        <input type="checkbox" name="is_approved" id="is_approved" class="w-5 h-5 text-green-500 border-gray-300 rounded-md focus:ring-green-500">
+                    </label>
+                    <button type="submit" class="bg-green-500 text-white px-4 py-1.5 rounded-lg text-sm hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 transition shadow-md hover:scale-105">
+                        Vote
+                    </button>
+                </div>
+            </form>
+            {% else %}
+            <p class="text-green-600 font-medium text-sm">✅ You have already voted!</p>
+            {% endif %}
+        </div>
+    </div>
+    
+
+
+
+            <!-- Add Comment Form -->
+            <div class="mt-8">
+                <h3 class="text-xl text-white font-semibold">Add a Comment</h3>
+                <form method="POST" class="mt-4 space-y-4">
+                    {% csrf_token %}
+                    <div>
+                        {% render_field comment_form.comment_text class="w-full h-20 border border-gray-300 rounded-lg py-1 px-5 text-sm text-gray-700 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all duration-300" placeholder="Write a comment..." %}
+                    </div>
+                   
+                    <div class="text-right">
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded-lg text-lg hover:bg-blue-700">Post</button>
+                    </div>
+                </form>
+            </div>       
+
+
+
+<!-- Comments Section -->
+<div class="flex justify-between items-center flex-wrap gap-4">
+    <div class="mt-8 w-full">
+        <h2 class="text-2xl text-white font-semibold">Comments</h2>
+        <ul class="mt-4 space-y-4">
+            {% if comments %}
+                {% for comment in comments %}
+                    <li class="bg-gray-100 p-4 rounded-lg flex gap-3 items-start" id="comment-{{ comment.pk }}">
+                        <img class="w-12 h-12 rounded-full" src="{% static 'img/pp.png' %}" alt="Profile">
+                        <div class="flex-1">
+                            <strong class="text-gray-800">{{ comment.user }}</strong>
+                            <p class="text-gray-600 text-sm font-semibold" id="comment-text-{{ comment.pk }}">{{ comment.comment_text }}</p>
+                            <span class="text-sm text-gray-500">{{ comment.created_at|date:"M d, Y H:i" }}</span>
+                        </div>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <li class="text-center text-gray-500 py-4">No comments yet.</li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+</div>
+{% endblock %}

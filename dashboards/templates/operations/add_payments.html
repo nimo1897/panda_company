@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% block title %}Add Payment{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto bg-gray-900 text-white shadow-lg rounded-lg p-6 mt-10">
+    <h1 class="text-3xl font-bold text-center mb-6">Add Payment</h1>
+
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        
+        <!-- Amount Field -->
+        <div class="mb-4">
+            <label for="amount" class="block font-bold mb-2">Amount:</label>
+            {% render_field form.amount class="form-control text-gray-900 font-bold w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %}
+            {% if form.amount.errors %}
+                <ul class="mt-2 text-red-500 text-sm">
+                    {% for error in form.amount.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Payment Date Field -->
+        <div class="mb-4">
+            <label for="payment_date" class="block font-bold mb-2">Payment Date:</label>
+            {% render_field form.payment_date class="form-control text-gray-900 font-bold w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %}
+            {% if form.payment_date.errors %}
+                <ul class="mt-2 text-red-500 text-sm">
+                    {% for error in form.payment_date.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Profile Field -->
+        <div class="mb-4">
+            <label for="profile" class="block font-bold mb-2">Client:</label>
+            {% render_field form.profile class="form-control text-gray-900 font-bold w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500" %}
+            {% if form.profile.errors %}
+                <ul class="mt-2 text-red-500 text-sm">
+                    {% for error in form.profile.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">
+            Add Payment
+        </button>
+    </form>
+</div>
+
+{% endblock %}

@@ -1,0 +1,121 @@
+{% load static %}
+<!DOCTYPE html>
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% endblock title %}</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css"/>
+    <link rel="stylesheet" href="{%  static 'css/tailwind.output.css'%}" />
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+
+
+  </head>
+<body>
+    <div class="flex h-screen bg-gray-50 dark:bg-gray-700" :class="{ 'overflow-hidden': isSideMenuOpen}">
+
+      {% include 'parts/sidebar.html' %}
+
+      <div class="flex flex-col flex-1 w-full">
+        {% include 'parts/header.html' %}
+        <main class="h-full overflow-y-auto">
+          {% block content %} {% endblock content %}
+        </main>
+      </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{%  static 'js/init-alpine.js'%}"></script>
+    <script src="{%  static 'js/charts-lines.js'%}" defer></script>
+    <script src="{%  static 'js/charts-pie.js'%}" defer></script>
+    <script src="{%  static 'js/cards-charts.js'%}" defer></script>
+
+
+  <!-- user dashboard charts -->
+    <script>
+      // Example of initializing charts using Chart.js (you can replace with actual data)
+      const ctx1 = document.getElementById('historicPaymentChart').getContext('2d');
+      new Chart(ctx1, {
+          type: 'bar',
+          data: {
+              labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+              datasets: [{
+                  label: 'Payments',
+                  data: [50, 150, 300, 500, 200, 400, 600, 800, 700, 900, 1100, 890],
+                  backgroundColor: 'rgba(158, 102, 235, 0.8)'
+              }]
+          }
+      });
+    
+      const ctx2 = document.getElementById('lovelyChart').getContext('2d');
+      new Chart(ctx2, {
+          type: 'line',
+          data: {
+              labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+              datasets: [{
+                  label: 'Trends',
+                  data: [50, 150, 300, 500, 200, 800, 300],
+                  borderColor: 'rgba(255, 99, 132, 1)',
+                  fill: false
+              }]
+          }
+      });
+    </script>
+
+
+
+<!-- add payment modal -->
+  <script>
+      // Open modal on click
+      document.getElementById("openModalBtn").addEventListener("click", function() {
+          document.getElementById("paymentModal").classList.remove("hidden");
+      });
+  
+      // Close modal
+      document.getElementById("closeModalBtn").addEventListener("click", function() {
+          document.getElementById("paymentModal").classList.add("hidden");
+      });
+  </script>
+
+
+
+<!-- balance modal -->
+  <script>
+  // Get elements
+  const balanceButton = document.getElementById("balanceButton");
+  const balanceModal = document.getElementById("balanceModal");
+  const closeModal = document.getElementById("closeModal");
+
+  // Show modal when balance button is clicked
+  balanceButton.addEventListener("click", () => {
+      balanceModal.classList.remove("hidden");
+  });
+
+  // Close modal when close button is clicked
+  closeModal.addEventListener("click", () => {
+      balanceModal.classList.add("hidden");
+  });
+
+  // Close modal when clicking outside the modal content
+  balanceModal.addEventListener("click", (event) => {
+      if (event.target === balanceModal) {
+          balanceModal.classList.add("hidden");
+      }
+  });
+
+</script>
+
+
+
+
+    
+
+</body>
+</html>
